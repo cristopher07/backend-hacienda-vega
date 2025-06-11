@@ -4,7 +4,7 @@ const {
   create,
   updateById,
   deleteById,
-} = require("../services/area.service");
+} = require("../services/area.services");
 
 // Mensajes locales opcionales
 const successMessages = {
