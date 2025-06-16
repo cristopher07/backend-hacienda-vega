@@ -66,6 +66,7 @@ exports.updateByIdC = async (req, res) => {
   const body = { ...req.body, id_area: id };
 
   const result = await updateByIdS(body);
+  console.log("result: ", result);
 
   if (result.success) {
     res.status(200).json({ ok: true, data: result.data, msg: successMessages.SUCCESS_UPDATE });

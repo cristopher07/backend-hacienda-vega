@@ -9,8 +9,8 @@ const areaController = require("../controllers/area.controller");
 router.get("/areas", areaController.findAll);
 router.get("/areas/:id", areaController.findById);
 router.post("/areas", areaController.create);
-router.put("/areas/:id", areaController.updateByIdC);
-router.delete("/areas/:id", areaController.deleteById);
+router.post("/areasUpdate/:id", areaController.updateByIdC);
+router.post("/areasDelete/:id", areaController.deleteById);
 
 
 module.exports = router;
