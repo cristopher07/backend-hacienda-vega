@@ -2,8 +2,8 @@ const {
   findById,
   findAll,
   create,
-  updateById,
   deleteById,
+  updateByIdS,
 } = require("../services/area.services");
 
 // Mensajes locales opcionales
@@ -61,20 +61,19 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.updateById = async (req, res) => {
-  const body = { ...req.body, ipAddress: req.connection.remoteAddress };
-  const result = await updateById(body);
+exports.updateByIdC = async (req, res) => {
+  const id = req.params.id;
+  const body = { ...req.body, id_area: id };
+
+  const result = await updateByIdS(body);
 
   if (result.success) {
-    if (result.message === "Nombre duplicado") {
-      res.status(200).json({ ok: false, msg: errorMessages.ERROR_DUPLICADO });
-    } else {
-      res.status(200).json({ ok: true, msg: successMessages.SUCCESS_UPDATE });
-    }
+    res.status(200).json({ ok: true, data: result.data, msg: successMessages.SUCCESS_UPDATE });
   } else {
     res.status(400).json({ ok: false, msg: errorMessages.ERROR_UPDATE });
   }
 };
+
 
 exports.deleteById = async (req, res) => {
   const id_area = req.params.id;

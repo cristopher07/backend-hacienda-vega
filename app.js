@@ -7,11 +7,16 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+// 👇 Aquí montamos las rutas
+const routes = require('./routes/routes');
+app.use('/hv', routes); 
+
+// Ruta simple de prueba
 app.get('/', (req, res) => {
   res.send('✅ Backend Hacienda La Vega activo');
 });
 
-// Iniciar servidor y probar conexión
+
 (async () => {
   try {
     await sequelize.authenticate();

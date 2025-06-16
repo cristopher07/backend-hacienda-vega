@@ -49,7 +49,7 @@ exports.create = async (obj) => {
   }
 };
 
-exports.updateById = async (obj) => {
+exports.updateByIdS = async (obj) => {
   try {
     const duplicate = await Area.findAll({
       where: {
