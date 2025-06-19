@@ -14,3 +14,5 @@ router.post("/areasDelete/:id", areaController.deleteById);
 
 
 module.exports = router;
+
+
