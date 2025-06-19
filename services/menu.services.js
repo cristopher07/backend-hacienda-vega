@@ -56,6 +56,7 @@ exports.create = async (obj) => {
 };
 
 exports.updateByIdS = async (obj) => {
+  console.log("obj:", obj);
   try {
     const duplicate = await Menu.findAll({
       where: {
@@ -72,10 +73,14 @@ exports.updateByIdS = async (obj) => {
     }
 
     const result = await Menu.update(
-      { tipo_menu: obj.tipo_menu },
-      { descripcion: obj.descripcion },
-      { precio: obj.precio },
-      { where: { id_menu: obj.id_menu } }
+      {
+        tipo_menu: obj.tipo_menu,
+        descripcion: obj.descripcion,
+        precio: obj.precio
+      },
+      {
+        where: { id_menu: obj.id_menu }
+      }
     );
 
     return { success: true, data: result };
