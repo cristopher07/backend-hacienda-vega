@@ -62,8 +62,12 @@ exports.create = async (req, res) => {
 };
 
 exports.updateByIdC = async (req, res) => {
+  console.log("res: ", res);
+  console.log("req: ", req);
   const id = req.params.id;
+  console.log("id: ", id);
   const body = { ...req.body, id_area: id };
+  console.log("body: ", body);
 
   const result = await updateByIdS(body);
   console.log("result: ", result);
