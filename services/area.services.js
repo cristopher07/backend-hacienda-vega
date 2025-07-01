@@ -36,6 +36,8 @@ exports.findAll = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion
   }
 };
 
+
+
 exports.create = async (obj) => {
   try {
     const [area, created] = await Area.findOrCreate({
