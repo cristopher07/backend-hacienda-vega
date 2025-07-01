@@ -30,9 +30,9 @@ exports.findAll = async (req, res) => {
   const result = await findAll(req.query);
 
   if (result.success) {
-    res.status(200).json({ ok: true, data: result.data, msg: successMessages.SUCCESS_FINDALL });
+    res.status(200).json({ valid: true, data: result.data, msg: successMessages.SUCCESS_FINDALL });
   } else {
-    res.status(400).json({ ok: false, msg: errorMessages.ERROR_FINDALL });
+    res.status(400).json({ valid: false, msg: errorMessages.ERROR_FINDALL });
   }
 };
 
@@ -40,9 +40,9 @@ exports.findById = async (req, res) => {
   const result = await findById(req.params.id);
 
   if (result.success) {
-    res.status(200).json({ ok: true, data: result.data, msg: successMessages.SUCCESS_FIND });
+    res.status(200).json({ valid: true, data: result.data, msg: successMessages.SUCCESS_FIND });
   } else {
-    res.status(404).json({ ok: false, msg: errorMessages.ERROR_FIND });
+    res.status(404).json({ valid: false, msg: errorMessages.ERROR_FIND });
   }
 };
 
@@ -52,30 +52,26 @@ exports.create = async (req, res) => {
 
   if (result.success) {
     if (result.created) {
-      res.status(201).json({ ok: true, data: result.data, msg: successMessages.SUCCESS_ADD });
+      res.status(201).json({ valid: true, data: result.data, msg: successMessages.SUCCESS_ADD });
     } else {
-      res.status(200).json({ ok: false, msg: errorMessages.ERROR_DUPLICADO });
+      res.status(200).json({ valid: false, msg: errorMessages.ERROR_DUPLICADO });
     }
   } else {
-    res.status(400).json({ ok: false, msg: errorMessages.ERROR_ADD });
+    res.status(400).json({ valid: false, msg: errorMessages.ERROR_ADD });
   }
 };
 
 exports.updateByIdC = async (req, res) => {
-  console.log("res: ", res);
-  console.log("req: ", req);
+
   const id = req.params.id;
-  console.log("id: ", id);
   const body = { ...req.body, id_area: id };
-  console.log("body: ", body);
 
   const result = await updateByIdS(body);
-  console.log("result: ", result);
 
   if (result.success) {
-    res.status(200).json({ ok: true, data: result.data, msg: successMessages.SUCCESS_UPDATE });
+    res.status(200).json({ valid: true, data: result.data, msg: successMessages.SUCCESS_UPDATE });
   } else {
-    res.status(400).json({ ok: false, msg: errorMessages.ERROR_UPDATE });
+    res.status(400).json({ valid: false, msg: errorMessages.ERROR_UPDATE });
   }
 };
 
@@ -85,8 +81,8 @@ exports.deleteById = async (req, res) => {
   const result = await deleteById(id_area);
 
   if (result.success) {
-    res.status(200).json({ ok: true, msg: successMessages.SUCCESS_DELETE });
+    res.status(200).json({ valid: true, msg: successMessages.SUCCESS_DELETE });
   } else {
-    res.status(400).json({ ok: false, msg: errorMessages.ERROR_DELETE });
+    res.status(400).json({ valid: false, msg: errorMessages.ERROR_DELETE });
   }
 };

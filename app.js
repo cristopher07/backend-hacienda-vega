@@ -1,9 +1,12 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors'); // 👈 importa cors
 const app = express();
 const sequelize = require('./config/db');
 
 const PORT = process.env.PORT || 3000;
+
+app.use(cors()); // 👈 habilita CORS para TODAS las rutas
 
 app.use(express.json());
 
@@ -15,7 +18,6 @@ app.use('/hv', routes);
 app.get('/', (req, res) => {
   res.send('✅ Backend Hacienda La Vega activo');
 });
-
 
 (async () => {
   try {
