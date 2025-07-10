@@ -66,9 +66,7 @@ exports.updateByIdC = async (req, res) => {
   const body = { ...req.body, id_bebida: id };
 
   const result = await updateByIdS(body);
-  console.log("result: ", result);
-  console.log("body: ", body);
-  console.log("id: ", id);
+
 
   if (result.success) {
     res.status(200).json({ ok: true, data: result.data, msg: successMessages.SUCCESS_UPDATE });

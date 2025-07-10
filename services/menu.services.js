@@ -56,7 +56,6 @@ exports.create = async (obj) => {
 };
 
 exports.updateByIdS = async (obj) => {
-  console.log("obj:", obj);
   try {
     const duplicate = await Menu.findAll({
       where: {
