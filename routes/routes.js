@@ -23,9 +23,9 @@ router.post("/menus", menuController.create);
 router.post("/menusUpdate/:id", menuController.updateByIdC);
 router.post("/menusDelete/:id", menuController.deleteById);
 
-router.get("/bebidas", bebidasController.findAll);
+router.get("/bebidas/all", bebidasController.findAll);
 router.get("/bebidas/:id", bebidasController.findById);
-router.post("/bebidas", bebidasController.create);
+router.post("/bebidas/add", bebidasController.create);
 router.post("/bebidasUpdate/:id", bebidasController.updateByIdC);
 router.post("/bebidasDelete/:id", bebidasController.deleteById);
 

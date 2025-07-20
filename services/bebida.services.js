@@ -18,13 +18,38 @@ exports.findAll = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion
       offset: paginacion === '' ? (page * rowsPerPage) : undefined,
       limit: paginacion === '' ? parseInt(rowsPerPage) : undefined,
       where: {
-        tipo_bebida: {
-          [Op.substring]: busqueda
-        },
+        [Op.and]: [
+          { activo: true },
+          {
+            [Op.or]: [
+              { tipo_bebida: { [Op.substring]: busqueda } },
+              { descripcion: { [Op.substring]: busqueda } },
+              { precio: { [Op.substring]: busqueda } },
+            ]
+          }
+        ]
+      },
+      attributes: {
+        include: [
+          [db.literal('COUNT(1) OVER()'), 'count'],
+        ]
+      }
+    });
+
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
+
+/*exports.findAll = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion = '' }) => {
+  try {
+    const result = await Bebida.findAll({
+      offset: paginacion === '' ? (page * rowsPerPage) : undefined,
+      limit: paginacion === '' ? parseInt(rowsPerPage) : undefined,
+      where: {
         descripcion: {
-          [Op.substring]: busqueda
-        },
-        precio: {
           [Op.substring]: busqueda
         },
         activo: true
@@ -41,7 +66,7 @@ exports.findAll = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion
     return { success: false, error: error.message };
   }
 };
-
+*/
 exports.create = async (obj) => {
   try {
     const [bebida, created] = await Bebida.findOrCreate({
