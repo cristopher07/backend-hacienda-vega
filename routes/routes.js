@@ -8,6 +8,7 @@ const bebidasController = require("../controllers/bebida.controller");
 const mesasController = require("../controllers/mesa.controller");
 const usuariosController = require("../controllers/usuarios.controller");
 const inventarioController = require("../controllers/inventario.controller");
+const solicitudController = require("../controllers/solicitud.controller");
 // Middleware de autenticación, si lo usas
 // const oauthController = require("../middleware/oauth.controller"); // Descomenta si aplica
 
@@ -49,6 +50,12 @@ router.post("/inventario/add", inventarioController.create);
 router.post("/inventario/Update/:id", inventarioController.updateByIdC);
 router.post("/inventario/Delete/:id", inventarioController.deleteById);
 
+router.get("/solicitudes/all", solicitudController.findAll);
+router.get("/solicitudes/query", solicitudController.findAllQuery);
+router.get("/solicitudes/:id", solicitudController.findById);
+router.post("/solicitudes/add", solicitudController.create);
+router.post("/solicitudes/Update/:id", solicitudController.updateByIdC);
+router.post("/solicitudes/Delete/:id", solicitudController.deleteById);
 
 module.exports = router;
 
