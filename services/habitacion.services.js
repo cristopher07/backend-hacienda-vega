@@ -1,12 +1,12 @@
 const { Op } = require("sequelize");
 const db = require("../config/db");
-const BebidaModel = require("../model/bebida.model");
-const Bebida = BebidaModel(db, db.Sequelize);
+const HabitacionModel = require("../model/habitacion.model");
+const Habitacion = HabitacionModel(db, db.Sequelize);
 
-exports.findById = async (id_bebida) => {
+exports.findById = async (id_habitacion) => {
   try {
-    const bebida = await Bebida.findByPk(id_bebida);
-    return { success: true, data: bebida };
+    const habitacion = await Habitacion.findByPk(id_habitacion);
+    return { success: true, data: habitacion };
   } catch (error) {
     return { success: false, error: error.message };
   }
@@ -14,11 +14,20 @@ exports.findById = async (id_bebida) => {
 
 exports.findAll = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion = '' }) => {
   try {
-    const result = await Bebida.findAll({
+    const result = await Habitacion.findAll({
       offset: paginacion === '' ? (page * rowsPerPage) : undefined,
       limit: paginacion === '' ? parseInt(rowsPerPage) : undefined,
       where: {
-        descripcion: {
+        tipo_habitacion: {
+          [Op.substring]: busqueda
+        },
+        numero_habitacion: {
+          [Op.substring]: busqueda
+        },
+        huespedes: {
+          [Op.substring]: busqueda
+        },
+        precio: {
           [Op.substring]: busqueda
         },
         activo: true
@@ -39,20 +48,21 @@ exports.findAll = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion
 exports.findAllByQuery = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion = '' }) => {
   let query = `
     SELECT COUNT(1) OVER() AS count,
-      id_bebida, 
-      tipo_bebida, 
-      descripcion, 
+      id_habitacion, 
+      tipo_habitacion, 
+      numero_habitacion,
+      huespedes,
       precio,
       estado,
       activo
-    FROM haciendalavega_sistema.crud_bebidas
+    FROM haciendalavega_sistema.habitaciones
     WHERE activo = 1
-      AND CONCAT(tipo_bebida, ' ', descripcion) LIKE ('%' :busqueda '%')
+      AND CONCAT(tipo_habitacion, ' ', numero_habitacion) LIKE ('%' :busqueda '%')
   `;
 
   if (paginacion === "") {
     query += `
-      ORDER BY descripcion
+      ORDER BY tipo_habitacion
       LIMIT ${page * rowsPerPage}, ${rowsPerPage}
     `;
   }
@@ -71,68 +81,47 @@ exports.findAllByQuery = async ({ busqueda = '', rowsPerPage = 10, page = 0, pag
     });
 };
 
-
-/*exports.findAll = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion = '' }) => {
-  try {
-    const result = await Bebida.findAll({
-      offset: paginacion === '' ? (page * rowsPerPage) : undefined,
-      limit: paginacion === '' ? parseInt(rowsPerPage) : undefined,
-      where: {
-        descripcion: {
-          [Op.substring]: busqueda
-        },
-        activo: true
-      },
-      attributes: {
-        include: [
-          [db.literal('COUNT(1) OVER()'), 'count'],
-        ]
-      }
-    });
-
-    return { success: true, data: result };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
-*/
 exports.create = async (obj) => {
   try {
-    const [bebida, created] = await Bebida.findOrCreate({
-      where: { tipo_bebida: obj.tipo_bebida, descripcion: obj.descripcion, precio: obj.precio, activo: true },
+    const [habitacion, created] = await Habitacion.findOrCreate({
+      where: { tipo_habitacion: obj.tipo_habitacion, numero_habitacion: obj.numero_habitacion, huespedes: obj.huespedes, precio: obj.precio, activo: true },
       defaults: { ...obj, activo: true }
     });
 
-    return { success: true, data: bebida, created };
+    return { success: true, data: habitacion, created };
   } catch (error) {
     return { success: false, error: error.message };
   }
 };
 
+
+
 exports.updateByIdS = async (obj) => {
   try {
-    const duplicate = await Bebida.findAll({
+    const duplicate = await Habitacion.findAll({
       where: {
-        tipo_bebida: obj.tipo_bebida,
-        descripcion: obj.descripcion,
+        tipo_habitacion: obj.tipo_habitacion,
+        numero_habitacion: obj.numero_habitacion,
+        huespedes: obj.huespedes,
         precio: obj.precio,
         activo: true,
-        id_bebida: { [Op.not]: obj.id_bebida }
+        id_habitacion: { [Op.not]: obj.id_habitacion }
       }
     });
 
     if (duplicate.length > 0) {
-      return { success: false, message: "Bebida duplicada" };
+      return { success: false, message: "Habitación duplicada" };
     }
 
-    const result = await Bebida.update(
+    const result = await Habitacion.update(
       {
-        tipo_bebida: obj.tipo_bebida,
-        descripcion: obj.descripcion,
+        tipo_habitacion: obj.tipo_habitacion,
+        numero_habitacion: obj.numero_habitacion,
+        huespedes: obj.huespedes,
         precio: obj.precio
       },
       {
-        where: { id_bebida: obj.id_bebida }
+        where: { id_habitacion: obj.id_habitacion }
       }
     );
 
@@ -142,11 +131,11 @@ exports.updateByIdS = async (obj) => {
   }
 };
 
-exports.deleteById = async (id_bebida) => {
+exports.deleteById = async (id_habitacion) => {
   try {
-    const result = await Bebida.update(
+    const result = await Habitacion.update(
       { activo: false },
-      { where: { id_bebida } }
+      { where: { id_habitacion } }
     );
 
     return { success: true, data: result };
@@ -154,3 +143,4 @@ exports.deleteById = async (id_bebida) => {
     return { success: false, error: error.message };
   }
 };
+

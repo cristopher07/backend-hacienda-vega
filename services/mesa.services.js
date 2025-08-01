@@ -39,6 +39,40 @@ exports.findAll = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion
   }
 };
 
+exports.findAllByQuery = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion = '' }) => {
+  let query = `
+    SELECT COUNT(1) OVER() AS count,
+      id_mesa, 
+      tipo_de_mesa, 
+      capacidad,
+      estado,
+      activo
+    FROM haciendalavega_sistema.crud_mesas
+    WHERE activo = 1
+      AND CONCAT(tipo_de_mesa, ' ', capacidad) LIKE ('%' :busqueda '%')
+  `;
+
+  if (paginacion === "") {
+    query += `
+      ORDER BY tipo_de_mesa
+      LIMIT ${page * rowsPerPage}, ${rowsPerPage}
+    `;
+  }
+
+  return db
+    .query(query, {
+      replacements: { busqueda },
+      type: db.Sequelize.QueryTypes.SELECT,
+    })
+    .then((response) => {
+      return { success: true, data: response };
+    })
+    .catch((error) => {
+      console.error(error);
+      return { success: false, error: error.message };
+    });
+};
+
 exports.create = async (obj) => {
   try {
     const [mesa, created] = await Mesa.findOrCreate({
@@ -51,6 +85,7 @@ exports.create = async (obj) => {
     return { success: false, error: error.message };
   }
 };
+
 
 exports.updateByIdS = async (obj) => {
   try {
