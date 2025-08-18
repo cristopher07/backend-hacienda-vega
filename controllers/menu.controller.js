@@ -1,6 +1,7 @@
 const {
   findById,
   findAll,
+  findAllByQuery,
   create,
   deleteById,
   updateByIdS,
@@ -46,20 +47,31 @@ exports.findById = async (req, res) => {
   }
 };
 
+exports.findAllQuery = async (req, res) => {
+  const result = await findAllByQuery(req.query);
+
+  if (result.success) {
+    res.status(200).json({ valid: true, data: result.data, msg: successMessages.SUCCESS_FINDALL });
+  } else {
+    res.status(400).json({ valid: false, msg: errorMessages.ERROR_FINDALL });
+  }
+};
+
 exports.create = async (req, res) => {
   const obj = { ...req.body, ipAddress: req.connection.remoteAddress };
   const result = await create(obj);
 
   if (result.success) {
     if (result.created) {
-      res.status(201).json({ ok: true, data: result.data, msg: successMessages.SUCCESS_ADD });
+      res.status(201).json({ valid: true, data: result.data, msg: successMessages.SUCCESS_ADD });
     } else {
-      res.status(200).json({ ok: false, msg: errorMessages.ERROR_DUPLICADO });
+      res.status(200).json({ valid: false, msg: errorMessages.ERROR_DUPLICADO });
     }
   } else {
-    res.status(400).json({ ok: false, msg: errorMessages.ERROR_ADD });
+    res.status(400).json({ valid: false, msg: errorMessages.ERROR_ADD });
   }
 };
+
 
 exports.updateByIdC = async (req, res) => {
   const id = req.params.id;
@@ -67,11 +79,10 @@ exports.updateByIdC = async (req, res) => {
 
   const result = await updateByIdS(body);
 
-
-  if (result.success) {
-    res.status(200).json({ ok: true, data: result.data, msg: successMessages.SUCCESS_UPDATE });
+if (result.success) {
+    res.status(200).json({ valid: true, msg: successMessages.SUCCESS_DELETE });
   } else {
-    res.status(400).json({ ok: false, msg: errorMessages.ERROR_UPDATE });
+    res.status(400).json({ valid: false, msg: errorMessages.ERROR_DELETE });
   }
 };
 
@@ -81,8 +92,8 @@ exports.deleteById = async (req, res) => {
   const result = await deleteById(id_menu);
 
   if (result.success) {
-    res.status(200).json({ ok: true, msg: successMessages.SUCCESS_DELETE });
+    res.status(200).json({ valid: true, msg: successMessages.SUCCESS_DELETE });
   } else {
-    res.status(400).json({ ok: false, msg: errorMessages.ERROR_DELETE });
+    res.status(400).json({ valid: false, msg: errorMessages.ERROR_DELETE });
   }
 };

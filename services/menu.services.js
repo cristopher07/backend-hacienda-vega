@@ -42,6 +42,41 @@ exports.findAll = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion
   }
 };
 
+exports.findAllByQuery = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion = '' }) => {
+  let query = `
+    SELECT COUNT(1) OVER() AS count,
+      id_menu, 
+      tipo_menu, 
+      descripcion,
+      precio,
+      estado,
+      activo
+    FROM haciendalavega_sistema.crud_menu
+    WHERE activo = 1
+      AND CONCAT(tipo_menu, ' ', descripcion) LIKE ('%' :busqueda '%')
+  `;
+
+  if (paginacion === "") {
+    query += `
+      ORDER BY tipo_menu
+      LIMIT ${page * rowsPerPage}, ${rowsPerPage}
+    `;
+  }
+
+  return db
+    .query(query, {
+      replacements: { busqueda },
+      type: db.Sequelize.QueryTypes.SELECT,
+    })
+    .then((response) => {
+      return { success: true, data: response };
+    })
+    .catch((error) => {
+      console.error(error);
+      return { success: false, error: error.message };
+    });
+};
+
 exports.create = async (obj) => {
   try {
     const [menu, created] = await Menu.findOrCreate({
@@ -54,6 +89,8 @@ exports.create = async (obj) => {
     return { success: false, error: error.message };
   }
 };
+
+
 
 exports.updateByIdS = async (obj) => {
   try {
@@ -100,3 +137,4 @@ exports.deleteById = async (id_menu) => {
     return { success: false, error: error.message };
   }
 };
+
