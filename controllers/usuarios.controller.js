@@ -4,7 +4,8 @@ const {
   create,
   deleteById,
   updateByIdS,
-  findAllByQuery
+  findAllByQuery,
+  login
 } = require("../services/usuarios.services");
 
 // Mensajes locales opcionales
@@ -14,6 +15,7 @@ const successMessages = {
   SUCCESS_ADD: "Usuario registrado correctamente",
   SUCCESS_UPDATE: "Usuario actualizado correctamente",
   SUCCESS_DELETE: "Usuario eliminado correctamente",
+  SUCCESS_LOGIN: "Login exitoso",
 };
 
 const errorMessages = {
@@ -23,6 +25,7 @@ const errorMessages = {
   ERROR_UPDATE: "Error al actualizar el usuario",
   ERROR_DELETE: "Error al eliminar el usuario",
   ERROR_DUPLICADO: "Usuario ya registrado",
+  ERROR_LOGIN: "Error en el login",
 };
 
 // ✅ CRUD Controllers
@@ -99,5 +102,31 @@ exports.deleteById = async (req, res) => {
     res.status(200).json({ valid: true, msg: successMessages.SUCCESS_DELETE });
   } else {
     res.status(400).json({ valid: false, msg: errorMessages.ERROR_DELETE });
+  }
+};
+
+exports.login = async (req, res) => {
+  const { usuario, password } = req.body;
+
+  // Validar que se envíen los campos requeridos
+  if (!usuario || !password) {
+    return res.status(400).json({ 
+      valid: false, 
+      msg: "Usuario y contraseña son requeridos" 
+    });
+  }
+
+  const result = await login(usuario, password);
+
+  if (result.success) {
+    res.status(200).json({ 
+      valid: true, 
+      data: result.data, 
+      msg: result.message || successMessages.SUCCESS_LOGIN 
+    });
+  } else {
+    // Usar el mensaje específico del servicio o el genérico
+    const msg = result.message || errorMessages.ERROR_LOGIN;
+    res.status(401).json({ valid: false, msg });
   }
 };

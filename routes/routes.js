@@ -42,6 +42,7 @@ router.get("/usuarios/:id", usuariosController.findById);
 router.post("/usuarios/add", usuariosController.create);
 router.post("/usuarios/Update/:id", usuariosController.updateByIdC);
 router.post("/usuarios/Delete/:id", usuariosController.deleteById);
+router.post("/usuarios/login", usuariosController.login);
 
 router.get("/inventario/all", inventarioController.findAll);
 router.get("/inventario/query", inventarioController.findAllQuery); 

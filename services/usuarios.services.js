@@ -165,3 +165,43 @@ exports.deleteById = async (id_usuario) => {
     return { success: false, error: error.message };
   }
 };
+
+exports.login = async (usuario, password) => {
+  console.log("-----Intento de login para usuario: ", usuario);
+  try {
+    // Buscar usuario por nombre de usuario
+    const user = await Usuario.findOne({
+      where: {
+        usuario: usuario,
+        activo: true
+      }
+    });
+
+    if (!user) {
+      return { success: false, message: "Usuario no encontrado" };
+    }
+
+    // Verificar contraseña con bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return { success: false, message: "Contraseña incorrecta" };
+    }
+
+    // Login exitoso - devolver datos del usuario sin la contraseña
+    const userData = {
+      id_usuario: user.id_usuario,
+      nombre: user.nombre,
+      usuario: user.usuario,
+      rol: user.rol,
+      id_area: user.id_area,
+      estado: user.estado,
+      activo: user.activo
+    };
+
+    return { success: true, data: userData, message: "Login exitoso" };
+  } catch (error) {
+    console.error("Error en login:", error);
+    return { success: false, error: error.message };
+  }
+};
