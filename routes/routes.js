@@ -10,6 +10,7 @@ const usuariosController = require("../controllers/usuarios.controller");
 const inventarioController = require("../controllers/inventario.controller");
 const solicitudController = require("../controllers/solicitud.controller");
 const habitacionController = require("../controllers/habitacion.controller");
+const brazaleteController = require("../controllers/brazalete.controller");
 // Middleware de autenticación, si lo usas
 // const oauthController = require("../middleware/oauth.controller"); // Descomenta si aplica
 
@@ -68,6 +69,13 @@ router.get("/habitaciones/:id", habitacionController.findById);
 router.post("/habitaciones/add", habitacionController.create);
 router.post("/habitaciones/Update/:id", habitacionController.updateByIdC);
 router.post("/habitaciones/Delete/:id", habitacionController.deleteById);
+
+router.get("/brazaletes/all", brazaleteController.findAll);
+router.get("/brazaletes/query", brazaleteController.findAllQuery);
+router.get("/brazaletes/:id", brazaleteController.findById);
+router.post("/brazaletes/add", brazaleteController.create);
+router.post("/brazaletes/Update/:id", brazaleteController.updateByIdC);
+router.post("/brazaletes/Delete/:id", brazaleteController.deleteById);
 
 module.exports = router;
 
