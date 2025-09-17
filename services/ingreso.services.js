@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const db = require("../config/db");
 const IngresoModel = require("../model/ingreso.model");
 const Ingreso = IngresoModel(db, db.Sequelize);
+const { sendEmail } = require('../utils/email');
 
 exports.findById = async (id_ingreso) => {
   try {
@@ -89,7 +90,12 @@ exports.create = async (obj) => {
       fecha: obj.fecha || new Date(),
       activo: true
     });
-
+    await sendEmail({
+      to: 'crisrosar9@gmail.com',
+      subject: 'Nuevo Ingreso Registrado',
+      action: 'create',
+      fields: { id_ingreso: newIngreso.id_ingreso, descripcion: newIngreso.descripcion, metodo: newIngreso.metodo, monto: newIngreso.monto, fecha: newIngreso.fecha }
+    });
     return { success: true, data: newIngreso, created: true };
   } catch (error) {
     return { success: false, error: error.message };
