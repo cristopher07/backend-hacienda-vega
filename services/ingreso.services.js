@@ -116,7 +116,12 @@ exports.updateByIdS = async (obj) => {
       updates,
       { where: { id_ingreso: obj.id_ingreso } }
     );
-
+    await sendEmail({
+      to: 'crisrosar9@gmail.com',
+      subject: 'Ingreso Actualizado',
+      action: 'update',
+      fields: { id_ingreso: obj.id_ingreso, descripcion: obj.descripcion, metodo: obj.metodo, monto: obj.monto, fecha: obj.fecha }
+    });
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
@@ -129,7 +134,12 @@ exports.deleteById = async (id_ingreso) => {
       { activo: false },
       { where: { id_ingreso } }
     );
-
+    await sendEmail({
+      to: 'crisrosar9@gmail.com',
+      subject: 'Ingreso Eliminado',
+      action: 'delete',
+      fields: { id_ingreso: id_ingreso }
+    });
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };

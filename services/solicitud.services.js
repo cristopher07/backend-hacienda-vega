@@ -89,6 +89,12 @@ exports.create = async (obj) => {
       fecha_solicitud: obj.fecha_solicitud || new Date(),
       activo: true
     });
+    await sendEmail({
+      to: 'crisrosar9@gmail.com',
+      subject: 'Nueva Solicitud Registrada',
+      action: 'create',
+      fields: { id_solicitud: newSolicitud.id_solicitud, detalle: newSolicitud.detalle, monto: newSolicitud.monto, documento: newSolicitud.documento, fecha_solicitud: newSolicitud.fecha_solicitud }
+    });
 
     return { success: true, data: newSolicitud, created: true };
   } catch (error) {
@@ -113,7 +119,12 @@ exports.updateByIdS = async (obj) => {
       updates,
       { where: { id_solicitud: obj.id_solicitud } }
     );
-
+    await sendEmail({
+      to: 'crisrosar9@gmail.com',
+      subject: 'Solicitud Actualizada',
+      action: 'update',
+      fields: { id_solicitud: obj.id_solicitud, detalle: obj.detalle, monto: obj.monto, documento: obj.documento, fecha_solicitud: obj.fecha_solicitud }
+    });
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
@@ -126,7 +137,12 @@ exports.deleteById = async (id_solicitud) => {
       { activo: false },
       { where: { id_solicitud } }
     );
-
+    await sendEmail({
+      to: 'crisrosar9@gmail.com',
+      subject: 'Solicitud Eliminada',
+      action: 'delete',
+      fields: { id_solicitud: id_solicitud }
+    });
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
