@@ -45,11 +45,12 @@ exports.findAllByQuery = async ({ busqueda = '', rowsPerPage = 10, page = 0, pag
       id_mesa, 
       tipo_de_mesa, 
       capacidad,
+      nombre,
       estado,
       activo
     FROM haciendalavega_sistema.crud_mesas
     WHERE activo = 1
-      AND CONCAT(tipo_de_mesa, ' ', capacidad) LIKE ('%' :busqueda '%')
+      AND CONCAT(tipo_de_mesa, ' ', capacidad, ' ', nombre) LIKE ('%' :busqueda '%')
   `;
 
   if (paginacion === "") {
@@ -74,9 +75,10 @@ exports.findAllByQuery = async ({ busqueda = '', rowsPerPage = 10, page = 0, pag
 };
 
 exports.create = async (obj) => {
+  console.log("obj-----: ", obj);
   try {
     const [mesa, created] = await Mesa.findOrCreate({
-      where: { tipo_de_mesa: obj.tipo_de_mesa, capacidad: obj.capacidad, activo: true },
+      where: { nombre: obj.nombre, tipo_de_mesa: obj.tipo_de_mesa, capacidad: obj.capacidad, activo: true },
       defaults: { ...obj, activo: true }
     });
 
@@ -89,28 +91,32 @@ exports.create = async (obj) => {
 
 exports.updateByIdS = async (obj) => {
   try {
+    // Verificar duplicado por nombre (no por tipo_de_mesa y capacidad)
     const duplicate = await Mesa.findAll({
       where: {
-        tipo_de_mesa: obj.tipo_de_mesa,
-        capacidad: obj.capacidad,
+        nombre: obj.nombre,
         activo: true,
         id_mesa: { [Op.not]: obj.id_mesa }
       }
     });
 
     if (duplicate.length > 0) {
-      return { success: false, message: "Mesa duplicada" };
+      return { success: false, message: "Ya existe una mesa con ese nombre" };
     }
+
 
     const result = await Mesa.update(
       {
         tipo_de_mesa: obj.tipo_de_mesa,
-        capacidad: obj.capacidad
+        capacidad: obj.capacidad,
+        nombre: obj.nombre,
+        estado: obj.estado
       },
       {
         where: { id_mesa: obj.id_mesa }
       }
     );
+
 
     return { success: true, data: result };
   } catch (error) {

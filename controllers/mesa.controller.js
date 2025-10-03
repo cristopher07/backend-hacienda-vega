@@ -79,10 +79,10 @@ exports.updateByIdC = async (req, res) => {
 
   const result = await updateByIdS(body);
 
-if (result.success) {
-    res.status(200).json({ valid: true, msg: successMessages.SUCCESS_DELETE });
+  if (result.success) {
+    res.status(200).json({ valid: true, data: result.data, msg: successMessages.SUCCESS_UPDATE });
   } else {
-    res.status(400).json({ valid: false, msg: errorMessages.ERROR_DELETE });
+    res.status(400).json({ valid: false, msg: errorMessages.ERROR_UPDATE });
   }
 };
 

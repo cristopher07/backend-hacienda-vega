@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const db = require("../config/db");
 const SolicitudModel = require("../model/solicitud.model");
 const Solicitud = SolicitudModel(db, db.Sequelize);
+const { sendEmail } = require('../utils/email');
 
 exports.findById = async (id_solicitud) => {
   try {
@@ -82,6 +83,7 @@ exports.findAllByQuery = async ({ busqueda = '', rowsPerPage = 10, page = 0, pag
 };
 
 exports.create = async (obj) => {
+  console.log("obj llege a crear solicitud: ", obj);
   try {
     // Crear la nueva solicitud con fecha actual si no se proporciona
     const newSolicitud = await Solicitud.create({
@@ -132,6 +134,7 @@ exports.updateByIdS = async (obj) => {
 };
 
 exports.deleteById = async (id_solicitud) => {
+  console.log("id_solicitud--- in delete: ", id_solicitud);
   try {
     const result = await Solicitud.update(
       { activo: false },

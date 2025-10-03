@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(50),
         allowNull: false
       },
+      nombre: {
+        type: DataTypes.STRING(100),
+        allowNull: false
+      },
       capacidad: {
         type: DataTypes.INTEGER,
         allowNull: false
@@ -21,8 +25,9 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: true
       },
       estado: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        defaultValue: 'Disponible'
       }
     },
     {

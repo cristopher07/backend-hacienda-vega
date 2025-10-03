@@ -14,7 +14,7 @@ exports.findById = async (id_habitacion) => {
 
 exports.findAll = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion = '' }) => {
   try {
-    const result = await Habitacion.findAll({
+    const result = await Habitacion.findAll({  
       offset: paginacion === '' ? (page * rowsPerPage) : undefined,
       limit: paginacion === '' ? parseInt(rowsPerPage) : undefined,
       where: {
@@ -52,6 +52,7 @@ exports.findAllByQuery = async ({ busqueda = '', rowsPerPage = 10, page = 0, pag
       tipo_habitacion, 
       numero_habitacion,
       huespedes,
+      disponible,
       precio,
       estado,
       activo
@@ -118,6 +119,7 @@ exports.updateByIdS = async (obj) => {
         tipo_habitacion: obj.tipo_habitacion,
         numero_habitacion: obj.numero_habitacion,
         huespedes: obj.huespedes,
+        disponible: obj.disponible,
         precio: obj.precio
       },
       {
