@@ -13,6 +13,8 @@ const habitacionController = require("../controllers/habitacion.controller");
 const brazaleteController = require("../controllers/brazalete.controller");
 const ingresosController = require("../controllers/ingreso.controller");
 
+const comandaController = require("../controllers/comanda.controller");
+
 router.get("/areas/all", areaController.findAll);
 router.get("/areas/:id", areaController.findById);
 router.post("/areas/add", areaController.create);
@@ -82,6 +84,14 @@ router.get("/ingresos/:id", ingresosController.findById);
 router.post("/ingresos/add", ingresosController.create);
 router.post("/ingresos/Update/:id", ingresosController.updateByIdC);
 router.post("/ingresos/Delete/:id", ingresosController.deleteById);
+
+// Rutas para comandas
+router.get("/comandas/all", comandaController.findAll);
+router.get("/comandas/query", comandaController.findAllComandasQuery);
+router.get("/comandas/:id", comandaController.findById);
+router.post("/comandas/add", comandaController.create);
+router.post("/comandas/Update/:id", comandaController.updateById);
+router.post("/comandas/Delete/:id", comandaController.deleteById);
 
 module.exports = router;
 
