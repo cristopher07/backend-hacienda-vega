@@ -1,7 +1,9 @@
-
+// Actualizar estado de la mesa
 const db = require('../config/db');
 const ComandaModel = require('../model/comanda.model');
 const Comanda = ComandaModel(db, db.Sequelize);
+const MesaModel = require('../model/mesa.model');
+const Mesa = MesaModel(db, db.Sequelize);
 const { Op } = require("sequelize");
 
 exports.create = async (obj) => {
@@ -13,18 +15,30 @@ exports.create = async (obj) => {
       const mappedArray = obj.map(item => ({
         ...item,
         id_bebidas: item.id_bebida,
-        id_menu: (item.id_menu === undefined || item.id_menu === '' || item.id_menu === null) ? null : item.id_menu
+        id_menu: (item.id_menu === undefined || item.id_menu === '' || item.id_menu === null) ? null : item.id_menu,
+        fecha: (item.fecha === undefined || item.fecha === null || item.fecha === '') ? new Date().toISOString().slice(0, 19).replace('T', ' ') : item.fecha,
+        estado: item.estado || 'En preparación'
       }));
       const newComandas = await Comanda.bulkCreate(mappedArray);
+      // Actualizar estado de la mesa si hay id_mesa en el primer elemento
+      if (mappedArray.length > 0 && mappedArray[0].id_mesa) {
+        await exports.updateEstadoMesa(mappedArray[0].id_mesa, 'Ocupada');
+      }
       return { success: true, data: newComandas };
     } else {
       // Mapear id_bebida a id_bebidas y asegurar id_menu null si viene vacío
       const mappedObj = {
         ...obj,
         id_bebidas: obj.id_bebida,
-        id_menu: (obj.id_menu === undefined || obj.id_menu === '' || obj.id_menu === null) ? null : obj.id_menu
+        id_menu: (obj.id_menu === undefined || obj.id_menu === '' || obj.id_menu === null) ? null : obj.id_menu,
+        fecha: (obj.fecha === undefined || obj.fecha === null || obj.fecha === '') ? new Date().toISOString().slice(0, 19).replace('T', ' ') : obj.fecha,
+        estado: obj.estado || 'En preparación'
       };
       const newComanda = await Comanda.create(mappedObj);
+      // Actualizar estado de la mesa si hay id_mesa
+      if (mappedObj.id_mesa) {
+        await exports.updateEstadoMesa(mappedObj.id_mesa, 'Ocupada');
+      }
       return { success: true, data: newComanda };
     }
   } catch (error) {
@@ -32,6 +46,15 @@ exports.create = async (obj) => {
   }
 };
 
+
+exports.updateEstadoMesa = async (id_mesa, estado = 'Ocupada') => {
+  try {
+    await Mesa.update({ estado }, { where: { id_mesa } });
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
 
 
 exports.findAll = async ({ busqueda = '', rowsPerPage = 10, page = 0, paginacion = '' }) => {
@@ -102,7 +125,7 @@ exports.findAllComandasQuery = async ({ busqueda = '', rowsPerPage = 10, page = 
 
   if (paginacion === "") {
     query += `
-      ORDER BY c.id_comanda DESC
+      ORDER BY c.fecha DESC, c.id_comanda DESC
       LIMIT ${page * rowsPerPage}, ${rowsPerPage}
     `;
   }
