@@ -1,4 +1,5 @@
 
+
 const ComandaService = require('../services/comanda.services');
 
 exports.create = async (req, res) => {
@@ -63,4 +64,24 @@ exports.deleteById = async (req, res) => {
   const { id_comanda } = req.params;
   const result = await ComandaService.deleteById(id_comanda);
   res.json(result);
+};
+
+exports.updateStateComanda = async (req, res) => {
+  const { ids, estado, id_mesa, estado_mesa } = req.body;
+  const result = await ComandaService.updateStateComanda(ids, estado, id_mesa, estado_mesa);
+  if (result.success) {
+    res.status(200).json({ ok: true, data: result.data, msg: 'Estados actualizados correctamente.' });
+  } else {
+    res.status(400).json({ ok: false, msg: 'Error al actualizar estados.' });
+  }
+};
+
+exports.updateOnlyStateMesa = async (req, res) => {
+  const { id_mesa, estado } = req.body;
+  const result = await ComandaService.updateOnlyStateMesa(id_mesa, estado);
+  if (result.success) {
+    res.status(200).json({ ok: true, msg: 'Estado de mesa actualizado correctamente.' });
+  } else {
+    res.status(400).json({ ok: false, msg: 'Error al actualizar estado de mesa.' });
+  }
 };

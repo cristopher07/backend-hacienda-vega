@@ -91,6 +91,8 @@ router.get("/comandas/query", comandaController.findAllComandasQuery);
 router.get("/comandas/:id", comandaController.findById);
 router.post("/comandas/add", comandaController.create);
 router.post("/comandas/Update/:id", comandaController.updateById);
+router.post("/comandas/update-state", comandaController.updateStateComanda);
+router.post("/comandas/update-mesa-state", comandaController.updateOnlyStateMesa);
 router.post("/comandas/Delete/:id", comandaController.deleteById);
 
 module.exports = router;

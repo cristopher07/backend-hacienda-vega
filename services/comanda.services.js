@@ -46,6 +46,31 @@ exports.create = async (obj) => {
   }
 };
 
+exports.updateStateComanda = async (ids, estado, id_mesa, estado_mesa) => {
+  try {
+    // Actualizar todas las comandas
+    const result = await Comanda.update(
+      { estado },
+      { where: { id_comanda: ids } }
+    );
+    // Actualizar estado de la mesa si corresponde
+    if (id_mesa && estado_mesa) {
+      await exports.updateOnlyStateMesa(id_mesa, estado_mesa);
+    }
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
+exports.updateOnlyStateMesa = async (id_mesa, estado_mesa) => {
+  try {
+    await Mesa.update({ estado: estado_mesa }, { where: { id_mesa } });
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
 
 exports.updateEstadoMesa = async (id_mesa, estado = 'Ocupada') => {
   try {
