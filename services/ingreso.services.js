@@ -100,9 +100,9 @@ exports.create = async (obj) => {
     await exports.updateDisponibilidadHabitacion(obj.fechaInicio, obj.fechaFin, obj.idHabitacion);
 
     await sendEmail({
-      to: 'crisrosar9@gmail.com',
+      to: 'neansanchez@gmail.com',
       subject: 'Nuevo Ingreso Registrado',
-      action: 'create',
+      action: 'Nuevo Ingreso',
       fields: { id_ingreso: newIngreso.id_ingreso, descripcion: newIngreso.descripcion, metodo: newIngreso.metodo, monto: newIngreso.monto, fecha: newIngreso.fecha,  cantidad: newIngreso.cantidad, fechaIngreso: newIngreso.fechaIngreso, fechaSalida: newIngreso.fechaSalida }
     });
     return { success: true, data: newIngreso, created: true };
@@ -230,9 +230,9 @@ exports.updateByIdS = async (obj) => {
       { where: { id_ingreso: obj.id_ingreso } }
     );
     await sendEmail({
-      to: 'crisrosar9@gmail.com',
+      to: 'neansanchez@gmail.com',
       subject: 'Ingreso Actualizado',
-      action: 'update',
+      action: 'Actualización de Ingreso',
       fields: { id_ingreso: obj.id_ingreso, descripcion: obj.descripcion, metodo: obj.metodo, monto: obj.monto, fecha: obj.fecha, cantidad: obj.cantidad, fechaIngreso: obj.fechaInicio, fechaSalida: obj.fechaFin }
     });
     return { success: true, data: result };
@@ -248,9 +248,9 @@ exports.deleteById = async (id_ingreso) => {
       { where: { id_ingreso } }
     );
     await sendEmail({
-      to: 'crisrosar9@gmail.com',
+      to: 'neansanchez@gmail.com',
       subject: 'Ingreso Eliminado',
-      action: 'delete',
+      action: 'Eliminación de ingreso',
       fields: { id_ingreso: id_ingreso }
     });
     return { success: true, data: result };

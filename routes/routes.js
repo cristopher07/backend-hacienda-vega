@@ -12,8 +12,10 @@ const solicitudController = require("../controllers/solicitud.controller");
 const habitacionController = require("../controllers/habitacion.controller");
 const brazaleteController = require("../controllers/brazalete.controller");
 const ingresosController = require("../controllers/ingreso.controller");
+const dashboardController = require("../controllers/dashboard.controller");
 
 const comandaController = require("../controllers/comanda.controller");
+const cierreController = require("../controllers/cierre.controller");
 
 router.get("/areas/all", areaController.findAll);
 router.get("/areas/:id", areaController.findById);
@@ -94,6 +96,12 @@ router.post("/comandas/Update/:id", comandaController.updateById);
 router.post("/comandas/update-state", comandaController.updateStateComanda);
 router.post("/comandas/update-mesa-state", comandaController.updateOnlyStateMesa);
 router.post("/comandas/Delete/:id", comandaController.deleteById);
+
+router.post("/cierres/resumen", cierreController.getResumenCaja);
+router.post("/cierres/add", cierreController.create);
+router.get("/cierres/all", cierreController.listarCierres);
+
+router.get("/dashboard/resumen", dashboardController.getDashboardResumen);
 
 module.exports = router;
 

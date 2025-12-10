@@ -58,7 +58,8 @@ exports.findAllByQuery = async ({ busqueda = '', rowsPerPage = 10, page = 0, pag
     LEFT JOIN haciendalavega_sistema.usuarios u ON u.id_usuario = s.id_usuario
     LEFT JOIN haciendalavega_sistema.areas a ON a.id_area = s.id_area
     WHERE s.activo = 1
-      AND CONCAT(s.detalle, ' ', u.nombre, ' ', a.nombre, ' ', s.documento) LIKE ('%' :busqueda '%')
+      AND CONCAT(s.detalle, ' ', u.nombre, ' ', a.nombre, ' ', s.documento) 
+          LIKE CONCAT('%', :busqueda, '%')
   `;
 
   if (paginacion === "") {
@@ -82,6 +83,7 @@ exports.findAllByQuery = async ({ busqueda = '', rowsPerPage = 10, page = 0, pag
     });
 };
 
+
 exports.create = async (obj) => {
   console.log("obj llege a crear solicitud: ", obj);
   try {
@@ -92,10 +94,10 @@ exports.create = async (obj) => {
       activo: true
     });
     await sendEmail({
-      to: 'crisrosar9@gmail.com',
+      to: 'neansanchez@gmail.com',
       subject: 'Nueva Solicitud Registrada',
-      action: 'create',
-      fields: { id_solicitud: newSolicitud.id_solicitud, detalle: newSolicitud.detalle, monto: newSolicitud.monto, documento: newSolicitud.documento, fecha_solicitud: newSolicitud.fecha_solicitud }
+      action: 'Creación de Solicitud',
+      fields: { id_solicitud: newSolicitud.id_solicitud, detalle: newSolicitud.detalle, monto: newSolicitud.monto, documento: newSolicitud.documento, fecha_solicitud: newSolicitud.fecha_solicitud, usuario_solicitud: newSolicitud.usuario_solicitud }
     });
 
     return { success: true, data: newSolicitud, created: true };
@@ -122,9 +124,9 @@ exports.updateByIdS = async (obj) => {
       { where: { id_solicitud: obj.id_solicitud } }
     );
     await sendEmail({
-      to: 'crisrosar9@gmail.com',
+      to: 'neansanchez@gmail.com',
       subject: 'Solicitud Actualizada',
-      action: 'update',
+      action: 'Actualización de Solicitud',
       fields: { id_solicitud: obj.id_solicitud, detalle: obj.detalle, monto: obj.monto, documento: obj.documento, fecha_solicitud: obj.fecha_solicitud }
     });
     return { success: true, data: result };
@@ -141,9 +143,9 @@ exports.deleteById = async (id_solicitud) => {
       { where: { id_solicitud } }
     );
     await sendEmail({
-      to: 'crisrosar9@gmail.com',
+      to: 'neansanchez@gmail.com',
       subject: 'Solicitud Eliminada',
-      action: 'delete',
+      action: 'Eliminación de Solicitud',
       fields: { id_solicitud: id_solicitud }
     });
     return { success: true, data: result };
